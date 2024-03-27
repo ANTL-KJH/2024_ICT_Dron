@@ -27,21 +27,6 @@ def rx_mode():
     spi.xfer([0b11101010])  # RX 모드로 전환
     GPIO.output(25, GPIO.HIGH)
 
-# 송신 모드로 전환
-def tx_mode():
-    GPIO.output(25, GPIO.LOW)
-    spi.xfer([0b11101000])  # TX 모드로 전환
-    GPIO.output(25, GPIO.HIGH)
-
-# 데이터 송신
-def send_data(data):
-    GPIO.output(8, GPIO.LOW)  # CSN 핀 LOW로 설정하여 SPI 통신 시작
-    spi.xfer([0b10100000])    # 데이터 송신 명령과 데이터 파이프 주소 전송
-    for byte in pipe_address:
-        spi.xfer([byte])
-    spi.xfer(data)            # 데이터 전송
-    GPIO.output(8, GPIO.HIGH) # CSN 핀 HIGH로 설정하여 SPI 통신 종료
-
 # 데이터 수신
 def receive_data():
     rx_mode()
@@ -56,11 +41,6 @@ try:
         # 데이터 수신
         received_data = receive_data()
         print("Received:", received_data)
-
-        # 수신된 데이터에 대한 응답 보내기
-        response_data = [0xAA, 0xBB, 0xCC, 0xDD]  # 임의의 응답 데이터
-        send_data(response_data)
-        print("Sent:", response_data)
 
         time.sleep(1)  # 1초 대기 후 반복
 
