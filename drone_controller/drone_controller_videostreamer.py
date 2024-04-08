@@ -17,6 +17,7 @@ class class_Drone_Controller_VideoStreamer:
                 frame = np.frombuffer(data, dtype=np.uint8)
                 frame = cv2.imdecode(frame, flags=1)
                 cv2.imshow('Video', frame)
+                cv2.moveWindow('Video', 0, 0)  # 창의 위치를 (0,0)으로 이동
                 if cv2.waitKey(1) & 0xFF == ord('q'):
                     break
             except Exception as e:

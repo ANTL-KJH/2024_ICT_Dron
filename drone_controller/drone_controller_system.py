@@ -9,8 +9,8 @@ import os
 class class_Drone_Controller_System:
     def __init__(self):
         self.info = drone_controller_information.class_Drone_Controller_Information()
-        self.controllerJoystick_L = drone_controller_joystick.class_Drone_Controller_Joystick(0, 0, 1, 2, 0, 1, self)
-        self.controllerJoystick_R = drone_controller_joystick.class_Drone_Controller_Joystick(1, 0, 1, 2, 0, 2, self)
+        self.controllerJoystick_L = drone_controller_joystick.class_Drone_Controller_Joystick(0, 0, 1, 2, 0, 1, self.info)
+        self.controllerJoystick_R = drone_controller_joystick.class_Drone_Controller_Joystick(1, 0, 1, 2, 0, 2, self.info)
         self.videoStreamer = drone_controller_videostreamer.class_Drone_Controller_VideoStreamer()
         self.dataSender = drone_controller_datasender.class_drone_controller_datasender(self.info)
 
@@ -25,18 +25,19 @@ class class_Drone_Controller_System:
         thread_VideoStream.start()
         thread_dataSender.start()
 
-
+    def print_system_log(self):
+        print("=" * 50)
+        print("Drone Controller State")
+        print("Joystick Left(x:{}, y:{}, val:{}".format(self.info.joystick_Left_x, self.info.joystick_Left_y,
+                                                        self.info.joystick_Left_val))
+        print("Joystick Right(x:{}, y:{}, val:{}".format(self.info.joystick_Right_x, self.info.joystick_Right_y,
+                                                         self.info.joystick_Right_val))
+        print("=" * 50)
+        os.system('clear')
 
             
     def run_drone_controller_system(self):
         # controllerSwitch = drone_controller_switch.class_Drone_Controller_Switch(self)
         self.start_Drone_Controller()
         while True:
-            print("="*50)
-            print("Drone Controller State")
-            print("Joystick Left(x:{}, y:{}, val:{}".format(self.info.joystick_Left_x, self.info.joystick_Left_y,
-                                                            self.info.joystick_Left_val))
-            print("Joystick Right(x:{}, y:{}, val:{}".format(self.info.joystick_Right_x, self.info.joystick_Right_y,
-                                                             self.info.joystick_Right_val))
-            print("="*50)
-            os.system('clear')
+            self.print_system_log()
