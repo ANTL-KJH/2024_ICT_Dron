@@ -143,6 +143,8 @@ void ModeChecks::checkAndReport(const Context &context, Report &reporter)
 	}
 
 	if (reporter.failsafeFlags().manual_control_signal_lost && reporter.failsafeFlags().mode_req_manual_control != 0) {
+
+		// antlkjh 2024.04.11 주석
 		//const bool rc_disabled = (_param_com_rc_in_mode.get() == 4);
 		bool rc_disabled = false;
 		NavModes nav_modes = rc_disabled ? (NavModes)reporter.failsafeFlags().mode_req_manual_control : NavModes::None;
@@ -155,6 +157,8 @@ void ModeChecks::checkAndReport(const Context &context, Report &reporter)
 		 * Sticks can be enabled via <param>COM_RC_IN_MODE</param> parameter.
 		 * </profile>
 		 */
+
+		// antlkjh 2024.04.11 주석
 		// reporter.armingCheckFailure(nav_modes,health_component_t::remote_control,events::ID("check_modes_manual_control"),log_level, "No manual control input");
 		reporter.clearArmingBits((NavModes)reporter.failsafeFlags().mode_req_manual_control);
 		reporter.clearCanRunBits((NavModes)reporter.failsafeFlags().mode_req_manual_control);
