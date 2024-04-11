@@ -146,7 +146,7 @@ void ModeChecks::checkAndReport(const Context &context, Report &reporter)
 
 
 		const bool rc_disabled = (_param_com_rc_in_mode.get() == 4);
-		bool rc_disabled = false;
+		//bool rc_disabled = false;
 		NavModes nav_modes = rc_disabled ? (NavModes)reporter.failsafeFlags().mode_req_manual_control : NavModes::None;
 		events::LogLevel log_level = rc_disabled ? events::Log::Error : events::Log::Warning;
 
