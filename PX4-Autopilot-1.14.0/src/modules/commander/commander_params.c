@@ -163,7 +163,7 @@ PARAM_DEFINE_INT32(COM_HOME_EN, 1);
  * @boolean
  * @group Commander
  */
-PARAM_DEFINE_INT32(COM_HOME_IN_AIR, 0);
+PARAM_DEFINE_INT32(COM_HOME_IN_AIR, 4); // antl kjh 0->4
 
 /**
  * RC control input mode

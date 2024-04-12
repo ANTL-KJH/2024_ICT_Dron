@@ -141,7 +141,7 @@ void ModeChecks::checkAndReport(const Context &context, Report &reporter)
 					    events::Log::Info, "Home position not set");
 		reporter.clearCanRunBits((NavModes)reporter.failsafeFlags().mode_req_home_position);
 	}
-    reporter.failsafeFlags().manual_control_signal_lost = false;
+
 	if (reporter.failsafeFlags().manual_control_signal_lost && reporter.failsafeFlags().mode_req_manual_control != 0) {
 
 

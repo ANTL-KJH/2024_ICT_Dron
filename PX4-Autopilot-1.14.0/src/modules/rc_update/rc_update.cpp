@@ -419,12 +419,12 @@ void RCUpdate::Run()
 		}
 
 		/* detect RC signal loss */
-		bool signal_lost = true;
+		bool signal_lost = false; // antl kjh true -> false // antl kjh true -> false
 
 		/* check flags and require at least four channels to consider the signal valid */
 		if (input_rc.rc_lost || input_rc.rc_failsafe || input_rc.channel_count < 4) {
 			/* signal is lost or no enough channels */
-			signal_lost = true;
+			signal_lost = false; // antl kjh true -> false // antl kjh true -> false
 
 		} else if ((input_rc.input_source == input_rc_s::RC_INPUT_SOURCE_PX4FMU_PPM ||
 			    input_rc.input_source == input_rc_s::RC_INPUT_SOURCE_PX4IO_PPM)
@@ -435,10 +435,10 @@ void RCUpdate::Run()
 			// and the remaining ones are 0.
 			for (unsigned int i = 0; i < 16; i++) {
 				if (i < 12 && input_rc.values[i] > 999 && input_rc.values[i] < 1005) {
-					signal_lost = true;
+					signal_lost = false; // antl kjh true -> false // antl kjh true -> false
 
 				} else if (input_rc.values[i] == 0) {
-					signal_lost = true;
+					signal_lost = false; // antl kjh true -> false // antl kjh true -> false
 
 				} else {
 					signal_lost = false;
@@ -462,7 +462,7 @@ void RCUpdate::Run()
 				if ((_param_rc_fails_thr.get() < _parameters.min[fs_ch] && input_rc.values[fs_ch] < _param_rc_fails_thr.get()) ||
 				    (_param_rc_fails_thr.get() > _parameters.max[fs_ch] && input_rc.values[fs_ch] > _param_rc_fails_thr.get())) {
 					/* failsafe triggered, signal is lost by receiver */
-					signal_lost = true;
+					signal_lost = false; // antl kjh true -> false // antl kjh true -> false
 				}
 			}
 		}
