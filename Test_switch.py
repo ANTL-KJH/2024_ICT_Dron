@@ -11,10 +11,10 @@ GPIO.setup(switch1_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP) # 풀 업 설정
 GPIO.setup(switch2_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP) # 풀 업 설정
 
 # 스위치 1의 이전 상태를 저장하기 위한 변수
-switch1_prev_state = False
+switch1_prev_state = GPIO.input(switch2_pin)
 
 # 스위치 2의 이전 상태를 저장하기 위한 변수
-switch2_prev_state = False
+switch2_prev_state = GPIO.input(switch2_pin)
 
 # 스위치 1의 인터럽트 처리 함수
 def switch1_callback(channel):
