@@ -10,6 +10,10 @@ GPIO.setmode(GPIO.BOARD)
 GPIO.setup(switch1_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP) # 풀 업 설정
 GPIO.setup(switch2_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP) # 풀 업 설정
 
+# 초기 스위치 상태 확인
+initial_switch1_state = GPIO.input(switch1_pin)
+initial_switch2_state = GPIO.input(switch2_pin)
+
 # 스위치 1의 인터럽트 처리 함수
 def switch1_callback(channel):
     print("스위치 1의 상태가 변경되었습니다.")
@@ -20,9 +24,12 @@ def switch2_callback(channel):
     print("스위치 2의 상태가 변경되었습니다.")
     # 여기에 스위치 2의 상태에 따른 작업을 추가하세요.
 
-# 인터럽트 이벤트 설정
-GPIO.add_event_detect(switch1_pin, GPIO.BOTH, callback=switch1_callback, bouncetime=200)
-GPIO.add_event_detect(switch2_pin, GPIO.BOTH, callback=switch2_callback, bouncetime=200)
+# 초기 스위치 상태가 OFF일 때만 인터럽트 이벤트 설정
+if initial_switch1_state == GPIO.LOW:
+    GPIO.add_event_detect(switch1_pin, GPIO.BOTH, callback=switch1_callback, bouncetime=200)
+
+if initial_switch2_state == GPIO.LOW:
+    GPIO.add_event_detect(switch2_pin, GPIO.BOTH, callback=switch2_callback, bouncetime=200)
 
 try:
     while True:
