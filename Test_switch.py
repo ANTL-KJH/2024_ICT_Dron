@@ -21,7 +21,7 @@ def switch1_callback(channel):
     global switch1_prev_state
     current_state = GPIO.input(switch1_pin)
     if current_state != switch1_prev_state:
-        switch1_prev_state = current_state
+        #switch1_prev_state = current_state
         if current_state == GPIO.LOW:
             print("스위치 1이 눌렸습니다.")
         else:
@@ -33,7 +33,7 @@ def switch2_callback(channel):
     global switch2_prev_state
     current_state = GPIO.input(switch2_pin)
     if current_state != switch2_prev_state:
-        switch2_prev_state = current_state
+        #switch2_prev_state = current_state
         if current_state == GPIO.LOW:
             print("스위치 2가 눌렸습니다.")
         else:
