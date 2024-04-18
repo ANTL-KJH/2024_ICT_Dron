@@ -4,7 +4,7 @@ import os
 
 # GPIO 핀 번호 설정
 switch1_pin = 11  # 보드 기준 핀 번호
-switch2_pin = 15  # 보드 기준 핀 번호
+switch2_pin = 13  # 보드 기준 핀 번호
 switch3_pin = 36
 switch4_pin = 37
 # GPIO 모드 설정
