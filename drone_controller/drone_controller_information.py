@@ -12,3 +12,4 @@ class class_Drone_Controller_Information:
         self.switch2 = 0
         self.switch3 = 0
         self.switch4 = 0
+        self.frame=None

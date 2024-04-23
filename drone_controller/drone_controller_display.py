@@ -7,20 +7,21 @@ import string
 
 
 class FlightDisplayApp:
-    def __init__(self, window, window_title, video_source=0):
-        self.window = window
-        self.window.title(window_title)
+    def __init__(self, info):
+        self.info = info
+        self.window = tk.Tk()
+        self.window.title("Flight Controller Display")
         self.window.geometry("800x480")  # Set window size to 800x480
 
-        self.video_source = video_source
+        self.video_source = self.info.frame
         self.vid = cv2.VideoCapture(self.video_source)
         self.vid.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
         self.vid.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
 
-        self.frame_canvas = tk.Canvas(window, width=640, height=480)
+        self.frame_canvas = tk.Canvas(self.window, width=640, height=480)
         self.frame_canvas.grid(row=0, column=0, sticky="nsew")
 
-        self.info_frame = tk.Frame(window, bg="#333333", width=160, height=480)  # Adjusted height for info frame
+        self.info_frame = tk.Frame(self.window, bg="#333333", width=160, height=480)  # Adjusted height for info frame
         self.info_frame.grid(row=0, column=1, sticky="nsew")
 
         self.gps_frame = tk.Frame(self.info_frame, bg="#333333", bd=2, relief=tk.SOLID)  # Box around GPS info
@@ -148,7 +149,4 @@ class FlightDisplayApp:
         switch_label.pack(anchor="w", padx=(8, 0))
 
 
-if __name__ == "__main__":
-    # Create a window and pass it to the application object
-    root = tk.Tk()
-    app = FlightDisplayApp(root, "Flight Controller Display", "C:\\Users\\ANTL\\Desktop\\t725.png")  # Set your video source
+

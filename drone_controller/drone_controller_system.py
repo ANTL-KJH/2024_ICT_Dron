@@ -5,6 +5,7 @@ from drone_controller.drone_controller_videostreamer import *
 from drone_controller.drone_controller_datasender import *
 from drone_controller.drone_controller_button import *
 from threading import Thread, Lock
+from drone_controller.drone_controller_display import *
 import os
 
 
@@ -17,6 +18,7 @@ class class_Drone_Controller_System:
         self.dataSender = class_drone_controller_datasender(self.info)
         self.button = class_drone_controller_button(self.info)
         self.switch = class_Drone_Controller_Switch(self.info)
+        self.dc_display = class_drone_controller_display(self.info)
 
     def start_Drone_Controller(self):
         print("SYSTEM ALARM::Drone Controller Started")
