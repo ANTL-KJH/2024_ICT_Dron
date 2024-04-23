@@ -16,6 +16,7 @@ class class_Drone_Controller_System:
         self.videoStreamer = class_Drone_Controller_VideoStreamer()
         self.dataSender = class_drone_controller_datasender(self.info)
         self.button = class_drone_controller_button(self.info)
+        self.switch = class_Drone_Controller_Switch(self.info)
 
     def start_Drone_Controller(self):
         print("SYSTEM ALARM::Drone Controller Started")
@@ -24,6 +25,7 @@ class class_Drone_Controller_System:
         thread_VideoStream = Thread(target=self.videoStreamer.run_VideoStreamer)
         thread_dataSender = Thread(target=self.dataSender.run_data_sender)
         thrad_button = Thread(target=self.button.run_button)
+        thread_switch = Thread(target=self.switch.runSwitch())
         thread_Joystick_Left.start()
         thread_Joystick_Right.start()
         thread_VideoStream.start()
