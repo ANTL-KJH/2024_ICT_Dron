@@ -18,10 +18,10 @@ class class_Drone_Controller_Switch:
     def runSwitch(self):
         while True:
             # 현재 스위치 상태 읽기
-            self.info.switch1 = GPIO.input(self.switch1_pin)
-            self.info.switch2 = GPIO.input(self.switch2_pin)
-            self.info.switch3 = GPIO.input(self.switch3_pin)
-            self.info.switch4 = GPIO.input(self.switch4_pin)
+            self.info.switch1 = True if GPIO.input(self.switch1_pin) == GPIO.HIGH else False
+            self.info.switch2 = True if GPIO.input(self.switch1_pin) == GPIO.HIGH else False
+            self.info.switch3 = True if GPIO.input(self.switch1_pin) == GPIO.HIGH else False
+            self.info.switch4 = True if GPIO.input(self.switch1_pin) == GPIO.HIGH else False
             time.sleep(0.05)
 
 

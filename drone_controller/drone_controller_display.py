@@ -4,7 +4,7 @@ from PIL import Image, ImageTk
 import threading
 import random
 import string
-
+from drone_controller.drone_controller_information import *
 
 class class_drone_controller_display:
     def __init__(self, info):
@@ -21,44 +21,44 @@ class class_drone_controller_display:
         self.frame_canvas = tk.Canvas(self.window, width=640, height=480)
         self.frame_canvas.grid(row=0, column=0, sticky="nsew")
 
-        self.info_frame = tk.Frame(self.window, bg="#333333", width=160, height=480)  # Adjusted height for info frame
+        self.info_frame = tk.Frame(self.window, bg="#808080", width=160, height=480, bd=2, relief=tk.SOLID)  # Adjusted height for info frame
         self.info_frame.grid(row=0, column=1, sticky="nsew")
 
-        self.gps_frame = tk.Frame(self.info_frame, bg="#333333", bd=2, relief=tk.SOLID)  # Box around GPS info
+        self.gps_frame = tk.Frame(self.info_frame, bg="#404040", bd=2, relief=tk.SOLID)  # Box around GPS info
         self.gps_frame.pack(anchor="w", padx=8, pady=(4, 0), fill=tk.X)
 
-        self.gps_label = tk.Label(self.gps_frame, text="GPS", anchor="w", bg="#333333", fg="white")  # GPS label
+        self.gps_label = tk.Label(self.gps_frame, text="GPS", anchor="w", bg="#404040", fg="white", font=("Arial bold", 10))  # GPS label
         self.gps_label.pack(anchor="w")
 
-        self.latitude_frame = tk.Frame(self.gps_frame, bg="#333333")  # Latitude frame
+        self.latitude_frame = tk.Frame(self.gps_frame, bg="#404040")  # Latitude frame
         self.latitude_frame.pack(anchor="w", padx=8)
 
         self.latitude_label = tk.Label(self.latitude_frame, text="Latitude: Waiting for data...", anchor="w",
-                                       bg="#333333", fg="white",font=("Arial", 8))  # White text color
+                                       bg="#404040", fg="white",font=("Arial", 8))  # White text color
         self.latitude_label.pack(anchor="w")
 
-        self.longitude_frame = tk.Frame(self.gps_frame, bg="#333333")  # Longitude frame
+        self.longitude_frame = tk.Frame(self.gps_frame, bg="#404040")  # Longitude frame
         self.longitude_frame.pack(anchor="w", padx=8, pady=(0, 4))
 
         self.longitude_label = tk.Label(self.longitude_frame, text="Longitude: Waiting for data...", anchor="w",
-                                        bg="#333333", fg="white", font=("Arial", 8))  # White text color
+                                        bg="#404040", fg="white", font=("Arial", 8))  # White text color
         self.longitude_label.pack(anchor="w")
 
-        self.switch_frame = tk.Frame(self.info_frame, bg="#333333", bd=2, relief=tk.SOLID)  # Box around switch info
+        self.switch_frame = tk.Frame(self.info_frame, bg="#404040", bd=2, relief=tk.SOLID)  # Box around switch info
         self.switch_frame.pack(anchor="w", padx=8, pady=(4, 0), fill=tk.X)
 
-        self.switch_state_label = tk.Label(self.switch_frame, text="Switch State", anchor="w", bg="#333333",
-                                           fg="white")  # Switch state label
+        self.switch_state_label = tk.Label(self.switch_frame, text="Switch State", anchor="w", bg="#404040",
+                                           fg="white", font=("Arial bold", 10))  # Switch state label
         self.switch_state_label.pack(anchor="w")
 
         self.switch_labels = []
-        self.switch_values = [False] * 4
 
-        self.joystick_frame_L = tk.Frame(self.info_frame, bg="#333333", bd=2,
+
+        self.joystick_frame_L = tk.Frame(self.info_frame, bg="#404040", bd=2,
                                          relief=tk.SOLID)  # Box around joystick L info
         self.joystick_frame_L.pack(anchor="w", padx=8, pady=(4, 0), fill=tk.X)
 
-        self.joystick_frame_R = tk.Frame(self.info_frame, bg="#333333", bd=2,
+        self.joystick_frame_R = tk.Frame(self.info_frame, bg="#404040", bd=2,
                                          relief=tk.SOLID)  # Box around joystick R info
         self.joystick_frame_R.pack(anchor="w", padx=8, pady=(4, 0), fill=tk.X)
 
@@ -86,19 +86,15 @@ class class_drone_controller_display:
             label.destroy()
 
         self.switch_labels = []
-        for i, switch_value in enumerate(self.switch_values):
-            switch_label = tk.Label(self.switch_frame, text=f"Switch {i + 1}: {'ON' if switch_value else 'OFF'}",
-                                    anchor="w", bg="#333333", fg="white")  # White text color
+        for i in range(len(self.info.arr_switch)):
+            switch_label = tk.Label(self.switch_frame, text=f"Switch {i + 1}: {'ON' if self.info.arr_switch[i] == 1 else 'OFF'}",
+                                    anchor="w", bg="#404040", fg="white", font=("Arial", 8))  # White text color
             switch_label.pack(anchor="w", padx=8)
             self.switch_labels.append(switch_label)
 
     def update_gps(self):
-        # IT관 위도 경도
-        latitude = 35.830622286686854
-        longitude = 128.7544099722211 
-
-        latitude_text = f"Latitude: {latitude:.5f}"
-        longitude_text = f"Longitude: {longitude:.5f}"
+        latitude_text = f"Latitude: {self.info.drone_latitude:.5f}"
+        longitude_text = f"Longitude: {self.info.drone_longitude:.5f}"
 
         self.latitude_label.config(text=latitude_text)
         self.longitude_label.config(text=longitude_text)
@@ -108,14 +104,14 @@ class class_drone_controller_display:
     def update_joystick(self):
         # Simulate joystick data
         joystick_values_L = {
-            'x': random.randint(0, 100),
-            'y': random.randint(0, 100),
-            'switch': random.choice([True, False])
+            'x': self.info.joystick_Left_x,
+            'y': self.info.joystick_Left_y,
+            'switch': self.info.joystick_Left_val
         }
         joystick_values_R = {
-            'x': random.randint(0, 100),
-            'y': random.randint(0, 100),
-            'switch': random.choice([True, False])
+            'x': self.info.joystick_Right_x,
+            'y': self.info.joystick_Right_y,
+            'switch': self.info.joystick_Right_val
         }
 
         # Update labels for joystick L
@@ -135,18 +131,18 @@ class class_drone_controller_display:
         for label in frame.winfo_children():
             label.destroy()
 
-        joystick_label = tk.Label(frame, text=name, anchor="w", bg="#333333", fg="white")
+        joystick_label = tk.Label(frame, text=name, anchor="w", bg="#404040", fg="white", font=("Arial bold", 10))
         joystick_label.pack(anchor="w")
 
-        x_label = tk.Label(frame, text=f"x: {values['x']}", anchor="w", bg="#333333", fg="white")
+        x_label = tk.Label(frame, text=f"x: {values['x']}", anchor="w", bg="#404040", fg="white", font=("Arial", 8))
         x_label.pack(anchor="w", padx=(8, 0))
 
-        y_label = tk.Label(frame, text=f"y: {values['y']}", anchor="w", bg="#333333", fg="white")
+        y_label = tk.Label(frame, text=f"y: {values['y']}", anchor="w", bg="#404040", fg="white", font=("Arial", 8))
         y_label.pack(anchor="w", padx=(8, 0))
 
         switch_label = tk.Label(frame, text=f"switch: {'ON' if values['switch'] else 'OFF'}", anchor="w",
-                                bg="#333333", fg="white")
+                                bg="#404040", fg="white", font=("Arial", 8))
         switch_label.pack(anchor="w", padx=(8, 0))
 
-
-
+if __name__ == "__main__":
+    dc_display = class_drone_controller_display(class_Drone_Controller_Information())
