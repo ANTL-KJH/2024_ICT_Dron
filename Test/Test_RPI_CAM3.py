@@ -13,6 +13,6 @@ while True:
     print(im)
     print(type(im))
     cv2.imshow("Camera", im)
-    with open("output.jpg", 'rb') as im:
-        image_bytes = im.read()
-    print(image_bytes)
+    #with open("output.jpg", 'rb') as im:
+    #    image_bytes = im.read()
+    #print(image_bytes)
