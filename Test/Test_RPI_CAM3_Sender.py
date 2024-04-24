@@ -14,7 +14,7 @@ picam2.start()
 # UDP 설정
 IP_CONTROLLER = "192.168.50.47"
 PORT_CONTROLLER = 12345  # 적절한 포트번호로 변경하세요
-BUFFER_SIZE = 1024
+BUFFER_SIZE = 46081
 video_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 # 이미지를 조각으로 나누는 함수

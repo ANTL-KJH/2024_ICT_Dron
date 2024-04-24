@@ -6,7 +6,7 @@ import socket
 # UDP 설정
 IP_THIS_MACHINE = "192.168.50.47"  # 수신하는 장비의 IP 주소
 PORT_THIS_MACHINE = 12345  # 위에서 사용한 포트번호와 동일하게 설정
-BUFFER_SIZE = 1024
+BUFFER_SIZE = 46081
 video_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 video_socket.bind((IP_THIS_MACHINE, PORT_THIS_MACHINE))
 
