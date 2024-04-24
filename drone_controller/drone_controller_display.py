@@ -6,7 +6,7 @@ import random
 import string
 
 
-class FlightDisplayApp:
+class class_drone_controller_display:
     def __init__(self, info):
         self.info = info
         self.window = tk.Tk()
