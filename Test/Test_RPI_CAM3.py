@@ -12,7 +12,7 @@ while True:
     im = picam2.capture_array()
     print(im)
     print(type(im))
-    cv2.imshow("Camera", im)
+    #cv2.imshow("Camera", im)
     #with open("output.jpg", 'rb') as im:
     #    image_bytes = im.read()
     #print(image_bytes)
