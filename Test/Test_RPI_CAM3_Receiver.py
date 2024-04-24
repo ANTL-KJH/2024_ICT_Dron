@@ -1,42 +1,41 @@
 import cv2
-import socket
 import numpy as np
+import socket
 
-UDP_IP = "0.0.0.0"
-UDP_PORT = 9999
+# UDP 설정
+IP_THIS_MACHINE = "192.168.50.47"  # 수신하는 장비의 IP 주소
+PORT_THIS_MACHINE = 12345  # 위에서 사용한 포트번호와 동일하게 설정
+BUFFER_SIZE = 1024
+video_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+video_socket.bind((IP_THIS_MACHINE, PORT_THIS_MACHINE))
 
-# 패킷을 저장할 버퍼
-frame_buffer = [None] * 20
+# 이미지를 조각으로 조립하는 함수
+def assemble_image(slices):
+    return np.vstack(slices)
 
-# 소켓 설정
-sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-sock.bind((UDP_IP, UDP_PORT))
+try:
+    while True:
+        # 이미지 조각 받기
+        image_slices = []
+        for i in range(20):
+            data, addr = video_socket.recvfrom(BUFFER_SIZE)
+            index = int.from_bytes(data[0:1], byteorder='big')  # 인덱스 추출
+            image_data = np.frombuffer(data[1:], dtype=np.uint8)  # 이미지 데이터 추출
+            slice_img = cv2.imdecode(image_data, cv2.IMREAD_COLOR)  # 이미지 디코딩
+            image_slices.append((index, slice_img))
 
-while True:
-    # 패킷 수신
-    data, addr = sock.recvfrom(46081)  # 하나의 패킷 크기는 46081 바이트 (1 바이트는 패킷의 인덱스)
+        # 조각을 정렬하여 이미지 조립
+        image_slices.sort(key=lambda x: x[0])  # 인덱스를 기준으로 정렬
+        assembled_image = assemble_image([slice_img for _, slice_img in image_slices])
 
-    # 패킷에서 인덱스와 데이터 추출
-    index = data[0]
-    packet_data = data[1:]
+        # 화면에 이미지 표시
+        cv2.imshow("Received Image", assembled_image)
 
-    # 프레임 버퍼에 패킷 데이터 삽입
-    frame_buffer[index] = packet_data
-
-    # 모든 패킷을 수신했는지 확인
-    if all(frame_buffer):
-        # 모든 패킷을 모아서 하나의 프레임으로 복원
-        frame_data = b''.join(frame_buffer)
-
-        # 프레임 데이터를 NumPy 배열로 변환
-        frame = np.frombuffer(frame_data, dtype=np.uint8).reshape((480, 640, 3))
-
-        # OpenCV를 사용하여 프레임 표시
-        cv2.imshow('Received Frame', frame)
-
-        # 키 입력을 기다리고 'q'가 입력되면 루프를 종료
+        # 'q' 키를 누를 때까지 대기
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
-# OpenCV 창 닫기
-cv2.destroyAllWindows()
+finally:
+    # OpenCV 창 닫기 및 소켓 닫기
+    cv2.destroyAllWindows()
+    video_socket.close()
