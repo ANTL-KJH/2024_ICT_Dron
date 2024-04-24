@@ -1,23 +1,50 @@
 import cv2
+import numpy as np
+import socket
 from picamera2 import Picamera2
 
+# Picamera2 초기화
 picam2 = Picamera2()
 picam2.preview_configuration.main.size = (640, 480)
-picam2.preview_configuration.main.format = "RGB888"  # BGR 형식으로 변경
+picam2.preview_configuration.main.format = "RGB888"
 picam2.preview_configuration.align()
 picam2.configure("preview")
 picam2.start()
 
-while True:
-    im = picam2.capture_array()
+# UDP 설정
+IP_CONTROLLER = "192.168.50.47"
+PORT_CONTROLLER = 12345  # 적절한 포트번호로 변경하세요
+BUFFER_SIZE = 1024
+video_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-    # OpenCV imshow를 사용하여 이미지 표시
-    cv2.imshow("Camera", im)
+# 이미지를 조각으로 나누는 함수
+def split_image(image, num_slices):
+    slice_height = image.shape[0] // num_slices
+    slices = []
+    for i in range(num_slices):
+        start = i * slice_height
+        end = start + slice_height
+        slices.append(image[start:end, :])
+    return slices
 
-    # 키 입력을 기다리고 'q'가 입력되면 루프를 종료
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
+try:
+    while True:
+        im = picam2.capture_array()
 
-# OpenCV 창 닫기 및 Picamera2 종료
-cv2.destroyAllWindows()
-picam2.stop()
+        # 이미지를 20개의 조각으로 나누기
+        image_slices = split_image(im, 20)
+
+        # 각 조각을 전송
+        for i, slice_img in enumerate(image_slices):
+            data = cv2.imencode('.jpg', slice_img)[1].tobytes()  # JPEG 형식으로 인코딩하여 바이트로 변환
+            video_socket.sendto(bytes([i]) + data, (IP_CONTROLLER, PORT_CONTROLLER))
+
+        # 'q' 키를 누를 때까지 대기
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+finally:
+    # OpenCV 창 닫기 및 Picamera2 종료
+    cv2.destroyAllWindows()
+    picam2.stop()
+    video_socket.close()
