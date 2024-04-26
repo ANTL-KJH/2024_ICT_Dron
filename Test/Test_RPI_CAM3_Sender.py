@@ -1,42 +1,40 @@
 import cv2
-import numpy as np
 import socket
-from picamera2 import Picamera2
+import pickle
+import struct
 
-# Picamera2 초기화
-picam2 = Picamera2()
-picam2.preview_configuration.main.size = (640, 480)
-picam2.preview_configuration.main.format = "RGB888"
-picam2.preview_configuration.align()
-picam2.configure("preview")
-picam2.start()
+# 카메라 초기화
+cap = cv2.VideoCapture(0)
+cap.set(3, 640)  # 영상 가로 크기 설정
+cap.set(4, 480)  # 영상 세로 크기 설정
 
-# UDP 설정
-IP_CONTROLLER = "165.229.185.185"
-PORT_CONTROLLER = 8080  # 적절한 포트번호로 변경하세요
-#BUFFER_SIZE = 46081
-video_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+# 수신 라즈베리파이의 IP 주소와 포트 번호 설정
+receiver_ip = "192.168.32.1"
+port = 8005
 
+# 소켓 초기화
+client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-try:
-    while True:
-        im = picam2.capture_array()
-        # 이미지를 20개의 조각으로 나누기
-        # image_slices = split_image(im, 20)
-        s=im.tobytes()
+while True:
+    ret, frame = cap.read()
 
-        # 각 조각을 전송
-        # for i, slice_img in enumerate(image_slices):
-        #     data = cv2.imencode('.jpg', slice_img)[1].tobytes()  # JPEG 형식으로 인코딩하여 바이트로 변환
-        #     video_socket.sendto(bytes([i]) + data, (IP_CONTROLLER, PORT_CONTROLLER))
-        for i in range(20):
-            video_socket.sendto(bytes([i]) +s[i*46080:(i+1) *46080], (IP_CONTROLLER, PORT_CONTROLLER))
-        # 'q' 키를 누를 때까지 대기
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
+    # 영상을 직렬화하여 전송
+    data = pickle.dumps(frame)
+    size = len(data)
+    max_packet_size = 65000  # UDP 패킷 최대 크기
+    num_packets = (size + max_packet_size - 1) // max_packet_size  # 올림 계산
 
-finally:
-    # OpenCV 창 닫기 및 Picamera2 종료
-    cv2.destroyAllWindows()
-    picam2.stop()
-    video_socket.close()
+    # 패킷을 여러 번에 걸쳐 전송
+    for i in range(num_packets):
+        start = i * max_packet_size
+        end = min((i + 1) * max_packet_size, size)
+        client_socket.sendto(data[start:end], (receiver_ip, port))
+
+    # 'q' 키를 누르면 종료
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+# 리소스 정리
+cap.release()
+cv2.destroyAllWindows()
+client_socket.close()
