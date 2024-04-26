@@ -33,13 +33,12 @@ while True:
     for i in range(num_packets):
         start = i * max_packet_size
         end = min((i + 1) * max_packet_size, size)
-        #client_socket.sendto(data[start:end], (receiver_ip, port))
-        client_socket.sendto(bytes([1]), (receiver_ip, port))
+        client_socket.sendto(data[start:end], (receiver_ip, port))
+        #client_socket.sendto(bytes([1]), (receiver_ip, port))
     # 'q' 키를 누르면 종료
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
 # 리소스 정리
-cap.release()
 cv2.destroyAllWindows()
 client_socket.close()
