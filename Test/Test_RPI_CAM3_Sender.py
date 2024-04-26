@@ -9,6 +9,7 @@ picam2.preview_configuration.main.size = (640, 480)
 picam2.preview_configuration.main.format = "BGR888"  # BGR 형식으로 변경
 picam2.preview_configuration.main.format = "RGB888"  # BGR 형식으로 변경
 picam2.preview_configuration.align()
+picam2.video_configuration.controls.FrameRate = 10.0
 picam2.configure("preview")
 picam2.start()
 
@@ -29,10 +30,10 @@ while True:
     num_packets = (size + max_packet_size - 1) // max_packet_size  # 올림 계산
 
     # 패킷을 여러 번에 걸쳐 전송
-    #for i in range(num_packets):
-    #    start = i * max_packet_size
-    #    end = min((i + 1) * max_packet_size, size)
-    #    client_socket.sendto(data[start:end], (receiver_ip, port))
+    for i in range(num_packets):
+        start = i * max_packet_size
+        end = min((i + 1) * max_packet_size, size)
+        client_socket.sendto(data[start:end], (receiver_ip, port))
 
     # 'q' 키를 누르면 종료
     if cv2.waitKey(1) & 0xFF == ord('q'):
