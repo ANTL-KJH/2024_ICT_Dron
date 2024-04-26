@@ -5,7 +5,7 @@ import struct
 from picamera2 import Picamera2
 
 picam2 = Picamera2()
-picam2.preview_configuration.main.size = (320, 240)
+picam2.preview_configuration.main.size = (640, 480)
 picam2.preview_configuration.main.format = "BGR888"  # BGR 형식으로 변경
 picam2.preview_configuration.main.format = "RGB888"  # BGR 형식으로 변경
 picam2.preview_configuration.align()
@@ -33,7 +33,7 @@ while True:
     for i in range(num_packets):
         start = i * max_packet_size
         end = min((i + 1) * max_packet_size, size)
-        client_socket.sendto(data[start:end], (receiver_ip, port))
+        #client_socket.sendto(data[start:end], (receiver_ip, port))
 
     # 'q' 키를 누르면 종료
     if cv2.waitKey(1) & 0xFF == ord('q'):
