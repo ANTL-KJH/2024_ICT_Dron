@@ -12,20 +12,11 @@ picam2.configure("preview")
 picam2.start()
 
 # UDP 설정
-IP_CONTROLLER = "192.168.50.71"
+IP_CONTROLLER = "165.229.185.185"
 PORT_CONTROLLER = 8080  # 적절한 포트번호로 변경하세요
 #BUFFER_SIZE = 46081
 video_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-# # 이미지를 조각으로 나누는 함수
-# def split_image(image, num_slices):
-#     slice_height = image.shape[0] // num_slices
-#     slices = []
-#     for i in range(num_slices):
-#         start = i * slice_height
-#         end = start + slice_height
-#         slices.append(image[start:end, :])
-#     return slices
 
 try:
     while True:
