@@ -5,11 +5,11 @@ import struct
 from picamera2 import Picamera2
 
 picam2 = Picamera2()
-picam2.preview_configuration.main.size = (640, 480)
+picam2.preview_configuration.main.size = (320, 240)
 picam2.preview_configuration.main.format = "BGR888"  # BGR 형식으로 변경
 picam2.preview_configuration.main.format = "RGB888"  # BGR 형식으로 변경
 picam2.preview_configuration.align()
-picam2.video_configuration.controls.FrameRate = 10.0
+picam2.video_configuration.controls.FrameRate = 5.0
 picam2.configure("preview")
 picam2.start()
 
