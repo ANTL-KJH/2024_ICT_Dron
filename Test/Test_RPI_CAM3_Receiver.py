@@ -4,7 +4,7 @@ import pickle
 import struct
 
 # 수신 라즈베리파이의 IP 주소와 포트 번호 설정
-receiver_ip = "165.229.125.128"
+receiver_ip = "192.168.50.126"
 port = 8005
 
 # 소켓 초기화
